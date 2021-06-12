@@ -14,15 +14,15 @@ import matplotlib.pyplot as plt
 manualSeed = 42
 random.seed(manualSeed)
 torch.manual_seed(manualSeed)
-batch_size = 128
+batch_size = 144
 image_size = 64
-n_embeddings = batch_size*2*2
-embed_dim = 1024
-ne = 64
-nd = 64
+n_embeddings = 512
+embed_dim = 64
+ne = 128
+nd = 128
 num_epochs = 10 
-lr = 0.0005
-beta = 0.35
+lr = 0.001
+beta = 0.25
 
 random_generation_interval = 250
 
@@ -80,7 +80,7 @@ valid_data=loader.train_loader_fn(batch_size)
 validation,_=next(iter(valid_data))
 validation=rgb2hsv(validation).to(device)
 valid_recon=model(validation)
-plt.figure(figsize=(8,3))
+plt.figure(figsize=(15,5))
 plt.subplot(1,2,1)
 plt.axis("off")
 plt.title("Validation Images")

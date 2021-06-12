@@ -7,6 +7,7 @@ import csv
 import os
 import numpy as np
 import pandas as pd
+from torchvision import transforms
 from torchvision.utils  import save_image,make_grid
 device = torch.device("cuda" if (torch.cuda.is_available()) else "cpu")
 #####  RGB<---->HSV ######
@@ -122,6 +123,13 @@ class Plotter():
         ani=FuncAnimation(plt.gcf(),_animation)
         plt.show()
     def im_plot(self,image):
-        save_image(make_grid(hsv_to_rgb(image.to(device)[:32]), padding=2, normalize=True),'Test_outputs/'+str(self.count)+'.png')
+        transform = transforms.Compose([
+            transforms.ToPILImage(),
+            transforms.Resize(size=128),
+            transforms.ToTensor()
+            ])
+        image = hsv_to_rgb(image.to(device)[:16])
+        image = [transform(x_) for x_ in image]
+        save_image(make_grid(image, padding=2, normalize=True),'Test_outputs/'+str(self.count)+'.png')
         self.count += 1
 
