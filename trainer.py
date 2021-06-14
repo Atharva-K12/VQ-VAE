@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 manualSeed = 42
 random.seed(manualSeed)
 torch.manual_seed(manualSeed)
-batch_size = 144
+batch_size = 128
 image_size = 64
 n_embeddings = 512
 embed_dim = 64
@@ -40,7 +40,7 @@ logger=utils.Logger(['Recon_loss','VQ_loss','Total_loss'])
 
 
 model=VQ_VAE.VQVAE(n_embeddings,nd,embed_dim,beta).to(device)
-MSE_criterion=nn.MSELoss()
+MSE_criterion=nn.SmoothL1Loss()
 BCE_criterion = nn.BCELoss()
 optimizer = optim.AdamW(model.parameters(), lr=lr)
 
@@ -66,7 +66,14 @@ try:
                     with torch.no_grad():
                         random_num=torch.randint(n_embeddings,(n_embeddings,1)).to(device)
                         random_gen=model.decode(random_num).detach().cpu()
-                    plot.im_plot(random_gen)
+                    plot.im_plot(random_gen,"Random_gen")
+                    model.eval()
+                    valid_data=loader.train_loader_fn(batch_size)
+                    validation,_=next(iter(valid_data))
+                    validation=rgb2hsv(validation).to(device)
+                    valid_recon=model(validation)
+                    plot.im_plot(validation,"Validation")
+                    plot.im_plot(valid_recon,"Reconstruction")
                 i+=1
         print('epoch :[%d/%d]\tTotal_loss: %.8f\tVQ_loss: %.8f\tRecon_loss: %.8f\n'% (epoch, num_epochs,loss.item(), vq_loss.item(),recon_loss.item()))
 except KeyboardInterrupt:

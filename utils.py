@@ -119,10 +119,18 @@ class Plotter():
             plt.xlabel("iterations")
             plt.ylabel("Loss")
             plt.legend()
-            plt.tight_layout()
+            #plt.tight_layout()
         ani=FuncAnimation(plt.gcf(),_animation)
         plt.show()
-    def im_plot(self,image):
+    def im_live_plotter(self):
+        def _animation(i):
+            image=plt.imread('Test_outputs/Reconstruction.png')
+            plt.cla()
+            plt.imshow(image) 
+            plt.axis('off')
+        ani=FuncAnimation(plt.gcf(),_animation)
+        plt.show()
+    def im_plot(self,image,s='0'):
         transform = transforms.Compose([
             transforms.ToPILImage(),
             transforms.Resize(size=128),
@@ -130,6 +138,4 @@ class Plotter():
             ])
         image = hsv_to_rgb(image.to(device)[:16])
         image = [transform(x_) for x_ in image]
-        save_image(make_grid(image, padding=2, normalize=True),'Test_outputs/'+str(self.count)+'.png')
-        self.count += 1
-
+        save_image(make_grid(image, padding=2, normalize=True),'Test_outputs/'+s+'.png')
