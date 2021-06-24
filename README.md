@@ -11,6 +11,6 @@ To view the live changes in loss use the command in another terminal
     python live_plot.py
    
 #### Output 
-after 30 epoch
+after 30 epochs
 
 ![Reconstructed Image](https://github.com/Atharva-K12/VQ-VAE/blob/main/Test_outputs/Reconstruction.png)
